@@ -15,7 +15,7 @@ public class JMHRunnerTest {
 	}
 
 	@ClassRule
-	public static JMHContainer container = new JMHContainer("dummy")
+	public static JMHContainer container = new JMHContainer("1.2.0")
 		.withFileSystemBind("/opt/.m2", "/root/.m2")
 		.withFileSystemBind("/opt/results", "/maven/target/results");
 

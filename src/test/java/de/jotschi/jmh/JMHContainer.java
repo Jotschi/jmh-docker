@@ -74,7 +74,7 @@ public class JMHContainer extends GenericContainer<JMHContainer> {
 	 * @throws IOException
 	 */
 	public JMHContainer downloadResult(String targetPath) throws IOException {
-		copyFileFromContainer("/maven/target/results/current.json", targetPath);
+		copyFileFromContainer("/maven/target/results/" + name + ".json", targetPath);
 		return this;
 	}
 
