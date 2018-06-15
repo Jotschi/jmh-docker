@@ -10,14 +10,17 @@ import de.jotschi.jmh.JMHContainer;
 public class JMHRunnerTest {
 
 	static {
+		// Run the benchmarks on a dedicated host.
 		System.setProperty("DOCKER_HOST", "tcp://hyperion.cluster.gentics.com:2375");
 	}
 
 	@ClassRule
-	public static JMHContainer container = new JMHContainer();
+	public static JMHContainer container = new JMHContainer("dummy")
+		.withFileSystemBind("/opt/.m2", "/root/.m2")
+		.withFileSystemBind("/opt/results", "/maven/target/results");
 
 	@Test
 	public void testBenchmarks() throws IOException {
-		container.downloadResult();
+		container.downloadResult("target/test.json");
 	}
 }

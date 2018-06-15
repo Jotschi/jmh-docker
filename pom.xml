@@ -61,8 +61,8 @@
 						<argument>-classpath</argument>
 						<classpath/>
 						<argument>de.jotschi.test.JMHRunner</argument>
+						<argument>${jmh.name}</argument>
 					</arguments>
-					<!-- <classpathScope>test</classpathScope> -->
 					<addResourcesToClasspath>true</addResourcesToClasspath>
 					<includeProjectDependencies>true</includeProjectDependencies>
 					<classpathScope>test</classpathScope>

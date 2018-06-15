@@ -25,6 +25,8 @@ public class JMHContainer extends GenericContainer<JMHContainer> {
 	private MavenBuildLock buildLock = new MavenBuildLock();
 	private Slf4jLogConsumer logConsumer = new Slf4jLogConsumer(log);
 
+	private String name;
+
 	public static LazyFuture<String> prepareDockerImage() {
 		ImageFromDockerfile dockerImage = new ImageFromDockerfile("jmh-container", true);
 		dockerImage.withFileFromClasspath("Dockerfile", "/Dockerfile");
@@ -32,18 +34,23 @@ public class JMHContainer extends GenericContainer<JMHContainer> {
 		return dockerImage;
 	}
 
-	public JMHContainer() {
+	/**
+	 * Create a new JMH container which will run the tests
+	 * 
+	 * @param name
+	 *            Name of the benchmark run
+	 */
+	public JMHContainer(String name) {
 		super(prepareDockerImage());
 		setWaitStrategy(Wait.forLogMessage("SUCCESS", 1));
+		this.name = name;
 	}
 
 	@Override
 	protected void configure() {
-		withFileSystemBind("/opt/.m2", "/root/.m2");
-		withFileSystemBind("/opt/results", "/maven/target/results");
 		withStartupTimeout(Duration.ofMinutes(15));
 		withWorkingDirectory("/maven");
-		withCommand("bash", "-c", "mvn -B test-compile exec:exec && sleep 20");
+		withCommand("bash", "-c", "mvn -B -Djmh.name=" + name + " test-compile exec:exec && sleep 20");
 		setStartupAttempts(1);
 		waitingFor(new NoWaitStrategy());
 		setLogConsumers(Arrays.asList(logConsumer, buildLock));
@@ -62,11 +69,12 @@ public class JMHContainer extends GenericContainer<JMHContainer> {
 	/**
 	 * Download the JMH result to the client.
 	 * 
-	 * @return
+	 * @param targetPath
+	 * @return Fluent API
 	 * @throws IOException
 	 */
-	public JMHContainer downloadResult() throws IOException {
-		copyFileFromContainer("/maven/target/results/current.json", "test");
+	public JMHContainer downloadResult(String targetPath) throws IOException {
+		copyFileFromContainer("/maven/target/results/current.json", targetPath);
 		return this;
 	}
 
