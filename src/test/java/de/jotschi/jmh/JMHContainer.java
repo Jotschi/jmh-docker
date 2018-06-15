@@ -50,6 +50,7 @@ public class JMHContainer extends GenericContainer<JMHContainer> {
 	protected void configure() {
 		withStartupTimeout(Duration.ofMinutes(15));
 		withWorkingDirectory("/maven");
+		// 20 Seconds is enough to potentially download the result files.
 		withCommand("bash", "-c", "mvn -B -Djmh.name=" + name + " test-compile exec:exec && sleep 20");
 		setStartupAttempts(1);
 		waitingFor(new NoWaitStrategy());
