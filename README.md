@@ -11,5 +11,5 @@ Just run the `JMHRunnerTest`. This test will build and run the docker container.
 The setup will also generate a combined `provided.js` of all previously found benchmark result files. You can run the JMH Visualizer to display the these combined results.
 
 ```bash
-docker run -p 8080:80 -v /opt/results/provided.js:/usr/share/nginx/html/provided.js' jotschi/jmh-visualizer
+docker run -p 8080:80 -v /opt/results/provided.js:/usr/share/nginx/html/provided.js jotschi/jmh-visualizer
 ```
